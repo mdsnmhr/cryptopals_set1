@@ -3,14 +3,14 @@
 # NCC Group Global's guided tour on Youtube
 # Author: Madison H.
 
-def _bytes_xor(a: bytes, b: bytes) -> bytes:
+def _bytes_xor(a: bytes, b: bytes, quiet=True, check_lens=False) -> bytes:
     if not quiet:
         print(a, "@", b)
     if check_lens and len(a) != len(b):
         raise ValueError("bytestring lengths are equal")
-    return bytes(byte_1 * byte_2 for byte_1, byte_2 in zip(a, b))
+    return bytes((byte_1 ^ byte_2) for byte_1, byte_2 in zip(a, b))
 
-def bytes_xor(args: bytes, quiet=True, check_lens=False):
+def bytes_xor(*args: bytes, quiet=True, check_lens=False):
     assert len(args) > 0
     result = args[0]
     for arg in args[1:]:
