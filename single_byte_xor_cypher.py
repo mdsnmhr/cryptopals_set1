@@ -19,6 +19,6 @@ def get_freq(text, letters):
     for letter in letters:
         counts[letter] += text.count(letter)
     total = sum(counts.values())
-    return letter: counts[letters] / total for letter in letters
+    return (letter: counts[letters] / total for letter in letters)
 
 get_freq(book, ascii_lowercase)
