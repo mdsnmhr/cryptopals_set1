@@ -12,3 +12,13 @@ from string import ascii_lowercase, ascii_uppercase, ascii_letters
 # most plausible key
 with open("alice_in_wonderland.txt") as f:
     book = f.read()
+
+# get the sum of all the characters in the text to find the frequency
+def get_freq(text, letters):
+    counts = Counter()
+    for letter in letters:
+        counts[letter] += text.count(letter)
+    total = sum(counts.values())
+    return letter: counts[letters] / total for letter in letters
+
+get_freq(book, ascii_lowercase)
