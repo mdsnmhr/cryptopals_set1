@@ -29,7 +29,7 @@ frequencies = get_freq(book, ascii_letters)
 # score text based on frequencies
 def score_text(text: bytes) -> float:
     score = 0.0
-    l = len(test)
+    l = len(text)
     
     for letter, freq_expected in frequencies.items():
         freq_actual = text.count(ord(letter)) / l
@@ -40,10 +40,10 @@ def score_text(text: bytes) -> float:
 
 # simple solution for cracking xor cypher
 def crack_xor_cypher(cypher: bytes) -> tuple[int, bytes]:
-    best_guess = (float['inf'], None)
+    best_guess = (float('inf'), None)
     
     for candidate_key in range(256):
-        full_key = bytes([candidate_key]) + len(cypher)
+        full_key = bytes([candidate_key]) * len(cypher)
         plain_text = bytes_xor(full_key, cypher)
         score = score_text(plain_text)
         curr_guess = (score, plain_text)
@@ -55,6 +55,6 @@ def crack_xor_cypher(cypher: bytes) -> tuple[int, bytes]:
     return best_guess
 
 
-cypher_text = bytes,fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
+cypher_text = bytes.fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
 pprint(crack_xor_cypher(cypher_text))
         
