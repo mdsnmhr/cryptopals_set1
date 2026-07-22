@@ -6,7 +6,7 @@
 
 from collections import Counter
 from dataclasses import dataclass
-from string import ascii_lowercase, ascii_uppercase, ascii_letters
+from string import ascii_lowercase
 from typing import Optional
 from fixed_xor import bytes_xor
 from pprint import pprint
@@ -26,7 +26,7 @@ def get_freq(text, letters):
     
     return {letter: counts[letters] / total for letter in letters}
 
-frequencies = get_freq(book, ascii_letters)
+frequencies = get_freq(book, ascii_lowercase)
 
 # dataclass implementation 
 @dataclass(order=True)
