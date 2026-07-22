@@ -5,7 +5,9 @@
 # Author: Madison H.
 
 from collections import Counter
+from dataclasses import dataclass
 from string import ascii_lowercase, ascii_uppercase, ascii_letters
+from typing import Optional
 from fixed_xor import bytes_xor
 from pprint import pprint
 
@@ -26,6 +28,21 @@ def get_freq(text, letters):
 
 frequencies = get_freq(book, ascii_letters)
 
+# dataclass implementation 
+dataclass(order=True)
+class ScoredGuess:
+    score: float = float("inf")
+    key: Optional[int] = None
+    cipher: Optional[bytes] = None
+    plaintext: Optional[bytes] = None
+    
+@classmethod
+def from_key(cls, ct, key_val):
+    full_key = bytes([key_val]) * len(ct)
+    pt = bytes_xor(ct, full_key)
+    score = score_text(pt)
+    return cls(score, key_val, ct, pt)
+
 # score text based on frequencies
 def score_text(text: bytes) -> float:
     score = 0.0
@@ -40,21 +57,19 @@ def score_text(text: bytes) -> float:
 
 # simple solution for cracking xor cypher
 def crack_xor_cypher(cypher: bytes) -> tuple[float, bytes]:
-    best_guess = (float('inf'), None)
+    results = []
     
     for candidate_key in range(256):
         full_key = bytes([candidate_key]) * len(cypher)
         plain_text = bytes_xor(full_key, cypher)
         score = score_text(plain_text)
         curr_guess = (score, plain_text)
-        best_guess = min(best_guess, curr_guess)
+        results.append(curr_guess)
     
-    if best_guess[1] is None:
-        exit("No key found [this should never happen]")
-    
-    return best_guess
+    results.sort()
+    return results[:5] # type: ignore
 
-
-cypher_text = bytes.fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
-pprint(crack_xor_cypher(cypher_text))
-        
+if __name__ == "__main__":
+    cypher_text = bytes.fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
+    pprint(crack_xor_cypher(cypher_text))
+            
