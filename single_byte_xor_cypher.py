@@ -29,7 +29,7 @@ def get_freq(text, letters):
 frequencies = get_freq(book, ascii_letters)
 
 # dataclass implementation 
-dataclass(order=True)
+@dataclass(order=True)
 class ScoredGuess:
     score: float = float("inf")
     key: Optional[int] = None
@@ -56,18 +56,18 @@ def score_text(text: bytes) -> float:
     return score
 
 # simple solution for cracking xor cypher
-def crack_xor_cypher(cypher: bytes) -> tuple[float, bytes]:
-    results = []
+def crack_xor_cypher(cypher: bytes):
+    best_guess = ScoredGuess()
     
     for candidate_key in range(256):
-        full_key = bytes([candidate_key]) * len(cypher)
-        plain_text = bytes_xor(full_key, cypher)
-        score = score_text(plain_text)
-        curr_guess = (score, plain_text)
-        results.append(curr_guess)
+        guess = ScoredGuess.from_key(cypher, candidate_key)  # type: ignore
+        best_guess = min(best_guess, guess)
     
-    results.sort()
-    return results[:5] # type: ignore
+    if best_guess.key is None:
+        exit("no key found (this should never happen)")
+    
+    return best_guess
+        
 
 if __name__ == "__main__":
     cypher_text = bytes.fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
