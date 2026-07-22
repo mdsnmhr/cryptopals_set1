@@ -36,12 +36,12 @@ class ScoredGuess:
     cipher: Optional[bytes] = None
     plaintext: Optional[bytes] = None
     
-@classmethod
-def from_key(cls, ct, key_val):
-    full_key = bytes([key_val]) * len(ct)
-    pt = bytes_xor(ct, full_key)
-    score = score_text(pt)
-    return cls(score, key_val, ct, pt)
+    @classmethod
+    def from_key(cls, ct, key_val):
+        full_key = bytes([key_val]) * len(ct)
+        pt = bytes_xor(ct, full_key)
+        score = score_text(pt)
+        return cls(score, key_val, ct, pt)
 
 # score text based on frequencies
 def score_text(text: bytes) -> float:
